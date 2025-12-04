@@ -3,12 +3,8 @@
 
 import utilidades
 import runpy
-import os
 
-
-limpiar = "cls" if os.name == "nt" else "clear"
-
-os.system(limpiar)
+utilidades.limpiar()
 try:
     usuarios = utilidades.cargar_diccionario("usuarios")
     id_usuario_ingresado = utilidades.cargar_diccionario("sesion")
@@ -24,7 +20,7 @@ opciones_menu = ["[0] Salir", "[1] Gestion de usuarios", "[2] Inventario", "[3] 
 seleccion = utilidades.mostrar_menu("Menu Principal Dataskins", opciones_menu, sesion_iniciada, nombre_usuario)
 
 if seleccion == 0:
-    os.system(limpiar)
+    utilidades.limpiar()
     print("\033[92mGracias por confiar en Dataskins!\033[0m\n")
     exit()
 elif seleccion == 1:

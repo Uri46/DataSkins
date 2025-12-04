@@ -2,12 +2,10 @@
 
 
 import utilidades
-import os
 import re
 import runpy
 
-limpiar = "cls" if os.name == "nt" else "clear"
-os.system(limpiar)
+utilidades.limpiar()
 
 try:
     armas = utilidades.cargar_diccionario("armas")
@@ -19,14 +17,14 @@ except:
 regex_color = re.compile(r'\033\[[0-9;]*m')
 orden_rareza = ("COMUN", "POCO COMUN", "RARO", "EPICO", "MITICO", "LEGENDARIO")
 
-os.system(limpiar)
+utilidades.limpiar()
 
 opciones_menu = ["[0] Volver al menu principal", "[1] Ver enciclopedia de camuflajes", "[2] Ver enciclopedia de armas"]
 
 while True:
     opcion_general = utilidades.mostrar_menu("Enciclopedia", opciones_menu)
 
-    os.system(limpiar)
+    utilidades.limpiar()
 
     if opcion_general == 0:
         runpy.run_path("menu_principal.py")

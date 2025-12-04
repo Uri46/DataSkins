@@ -2,11 +2,9 @@
 
 
 import utilidades
-import os
 import runpy
 
-limpiar = "cls" if os.name == "nt" else "clear"
-os.system(limpiar)
+utilidades.limpiar()
 
 try:
     usuarios = utilidades.cargar_diccionario("usuarios")
@@ -27,39 +25,45 @@ except:
     nombre_usuario_ingresado = ""
     sesion_iniciada = False
 
-opciones_menu = [
-    "[0] Volver al menu principal",
-    "[1] Registrarse",
-    "[2] Iniciar sesion",
-    "[3] Recargar saldo",
-    "[4] Cerrar sesion"
+while True:
+    if sesion_iniciada:
+        opciones_menu = [
+            "[0] Volver al menu principal",
+            "[1] Recargar saldo",
+            "[2] Cerrar sesion"
+        ]
+    else:
+        opciones_menu = [
+        "[0] Volver al menu principal",
+        "[1] Registrarse",
+        "[2] Iniciar sesion"
 ]
 
-while True:
     seleccion = utilidades.mostrar_menu("Gestion de usuarios", opciones_menu, sesion_iniciada, nombre_usuario_ingresado)
 
     if seleccion == 0:
         runpy.run_path("menu_principal.py")
 
-    elif seleccion == 1:
-        os.system(limpiar)
+    elif seleccion == 1 and not sesion_iniciada:
+        utilidades.limpiar()
         print("Ingrese los datos solicitados: ")
+        nombre_usuario = input("\n\tNombre de usuario: ").lower()
         correo = input("\n\t\tCorreo electronico: ").lower()
-        contrasenia = input("\n\t\t\tContrasenia: ")
+        contrasenia = input("\n\t\t\tContraseña: ")
         saldo = 0.0
         usuarios[id_usuario] = [nombre_usuario, correo, contrasenia, saldo]
         id_usuario += 1
         utilidades.guardar_diccionario("usuarios", usuarios)
-        os.system(limpiar)
+        utilidades.limpiar()
         print("Registro exitoso!, Por favor ahora inicie sesion.")
         input("Presione ENTER para continuar")
 
-    elif seleccion == 2:
-        os.system(limpiar)
+    elif seleccion == 2 and not sesion_iniciada:
+        utilidades.limpiar()
         print("Ingrese los datos solicitados: ")
         correo_consulta = input("\n\tCorreo electronico: ").lower()
-        contrasenia_consulta = input("\n\t\tContrasenia: ")
-        os.system(limpiar)
+        contrasenia_consulta = input("\n\t\tContraseña: ")
+        utilidades.limpiar()
         encontrado = False
         for id_temp, datos in usuarios.items():
             nombre_usuario, correo, contrasenia, saldo = datos
@@ -74,11 +78,11 @@ while True:
                 encontrado = True
                 break
         if not encontrado:
-            print("Correo o contrasenia incorrectos.")
+            print("Correo o contraseña incorrectos.")
         input("Presione ENTER para continuar")
 
-    elif seleccion == 3:
-        os.system(limpiar)
+    elif seleccion == 1 and sesion_iniciada:
+        utilidades.limpiar()
         if sesion_iniciada:
             print("Ingrese los datos solicitados: ")
             nro_tarjeta = input("\n\tTarjeta de credito/debito (16 digitos sin espacios): ")
@@ -94,14 +98,14 @@ while True:
                 recarga_saldo = float(recarga_saldo)
             usuarios[id_usuario_ingresado][3] += recarga_saldo
             utilidades.guardar_diccionario("usuarios", usuarios)
-            os.system(limpiar)
+            utilidades.limpiar()
             print("El pago se ha realizado correctamente!, su saldo ahora es de: $" + str(usuarios[id_usuario_ingresado][3]))
         else:
             print("Debe iniciar sesion primero.")
         input("Presione ENTER para continuar")
 
-    elif seleccion == 4:
-        os.system(limpiar)
+    elif seleccion == 2 and sesion_iniciada:
+        utilidades.limpiar()
         utilidades.guardar_diccionario("sesion", "")
         sesion_iniciada = False
         nombre_usuario_ingresado = ""

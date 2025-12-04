@@ -1,15 +1,13 @@
 # -*- coding: utf-8 -*-
 
 
-import os
 import time
 import random
 import runpy
 import utilidades
 
-limpiar = "cls" if os.name == "nt" else "clear"
+utilidades.limpiar()
 
-os.system(limpiar)
 try:
     cajas = utilidades.cargar_diccionario("cajas")
     contenido_cajas = utilidades.cargar_diccionario("contenido_cajas")
@@ -25,6 +23,7 @@ resultados = []
 
 try:
     id_usuario_ingresado = utilidades.cargar_diccionario("sesion")
+    nombre_usuario_ingresado = usuarios[id_usuario_ingresado][0]
 except:
     print("ERROR: No hay sesion iniciada")
     input("Presione ENTER para ir a la gestion de usuarios")
@@ -32,12 +31,14 @@ except:
 
 lista_cajas = []
 
-for id_caja, datos in cajas.items():
+cajas_ordenada = utilidades.reservacion_de_espacio(cajas, 3)
+
+for id_caja, datos in cajas_ordenada.items():
     nombre_caja, detalle, precio = datos
     linea = nombre_caja + " | " + detalle + " | $" + str(precio)
     lista_cajas.append((id_caja, linea))
 
-precio_caja_aleatoria = 5000.0
+precio_caja_aleatoria = 1250.0
 
 lista_cajas.append((-1, "\033[93mCaja Aleatoria | Contiene armas y camuflajes aleatorios | $" + str(precio_caja_aleatoria) + "\033[0m\n"))
 lista_cajas.append((-2, "[Volver al menu principal]\n"))
@@ -71,13 +72,13 @@ else:
     nombre_consulta_caja = cajas[consulta_caja][0]
     precio_caja = cajas[consulta_caja][2]
 
-os.system(limpiar)
+utilidades.limpiar()
 
 opciones_menu = ["[Regresar]", "[1]", "[2]", "[3]", "[4]", "[5]", "[6]", "[7]", "[8]", "[9]", "[10]"]
 
 cantidad_seleccionada = utilidades.mostrar_menu("Seleccione la cantidad que desea abrir de la " + nombre_consulta_caja, opciones_menu)
 
-os.system(limpiar)
+utilidades.limpiar()
 
 if cantidad_seleccionada == 0:
     runpy.run_path("apertura_cajas.py")
@@ -115,7 +116,7 @@ if not armas_caja or not camuflajes_caja:
     exit()
 
 if saldo < precio_final:
-    os.system(limpiar)
+    utilidades.limpiar()
     faltante = precio_final - saldo
     print("Le falta $" + str(faltante) + " para realizar la compra, por favor recargue saldo")
     input("Presione ENTER para ser llevado a la gestion de usuarios")
@@ -151,7 +152,7 @@ while contador < cantidad_seleccionada:
                 id_camuflaje_elegido = id_camuflaje
                 nombre_camuflaje_elegido = nombre_camuflaje
 
-    resultado = nombre_arma_elegida + " " + nombre_camuflaje_elegido
+    resultado = nombre_arma_elegida + " | " + nombre_camuflaje_elegido
     resultados.append(resultado)
     contador += 1
 
@@ -166,10 +167,11 @@ utilidades.guardar_diccionario("usuarios", usuarios)
 
 utilidades.guardar_diccionario("inventarios", inventarios)
 
-
 for i in range(cantidad_seleccionada):
-    os.system(limpiar)
-    print(("\033[96mAbriendo caja..." + "[" + str(i + 1) + "/" + str(cantidad_seleccionada) + "]" + "\033[0m\n"))
+    cuenta = str(i + 1)
+    str_cantidad_seleccionada = str(cantidad_seleccionada)
+    utilidades.limpiar()
+    print(("\033[96mAbriendo caja..." + "[" + cuenta + "/" + str_cantidad_seleccionada + "]" + "\033[0m\n"))
     print("     _________________________")
     print("    /                      /|")
     print("   /                      / |")
@@ -177,8 +179,8 @@ for i in range(cantidad_seleccionada):
     print("  |______________________| /")
     time.sleep(1)
 
-    os.system(limpiar)
-    print(("\033[96mAbriendo caja..." + "[" + str(i + 1) + "/" + str(cantidad_seleccionada) + "]" + "\033[0m\n"))
+    utilidades.limpiar()
+    print(("\033[96mAbriendo caja..." + "[" + cuenta + "/" + str_cantidad_seleccionada + "]" + "\033[0m\n"))
     print("      ______________________")
     print("    /                     /  \\")
     print("   /_____________________/___\\")
@@ -187,8 +189,8 @@ for i in range(cantidad_seleccionada):
     time.sleep(1)
 
     for j in range(30):
-        os.system(limpiar)
-        print("\033[96mAbriendo caja..." + "[" + str(i + 1) + "/" + str(cantidad_seleccionada) + "]" + "\033[0m\n")
+        utilidades.limpiar()
+        print("\033[96mAbriendo caja..." + "[" + str(i + 1) + "/" + str_cantidad_seleccionada + "]" + "\033[0m\n")
         arma = armas_caja[j % len(armas_caja)]
         camuflaje = camuflajes_caja[j % len(camuflajes_caja)]
         print(">> Arma: " + arma)
@@ -196,14 +198,15 @@ for i in range(cantidad_seleccionada):
         tiempo = max(0.03, 0.15 - (cantidad_seleccionada * 0.01))
         time.sleep(tiempo)
 
-    os.system(limpiar)
+    utilidades.limpiar()
     print("\033[92mHas obtenido:\033[0m\n  > " + resultados[i])
     time.sleep(2)
 
 if cantidad_seleccionada > 1:
-    os.system(limpiar)
+    utilidades.limpiar()
     print("Conseguiste:")
-    for resultado in resultados:
+    resultados_alineados = utilidades.reservacion_de_espacio(resultados, separador=" | ")
+    for resultado in resultados_alineados:
         print("  > " + resultado)
 
 input("\nPresione ENTER para volver al menu principal")

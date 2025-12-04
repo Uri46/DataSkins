@@ -2,12 +2,10 @@
 
 
 import utilidades
-import os
 import re
 import runpy
 
-limpiar = "cls" if os.name == "nt" else "clear"
-os.system(limpiar)
+utilidades.limpiar()
 
 try:
     armas = utilidades.cargar_diccionario("armas")
@@ -29,7 +27,7 @@ except:
 regex_color = re.compile(r'\033\[[0-9;]*m')
 orden_rareza = ("COMUN", "POCO COMUN", "RARO", "EPICO", "MITICO", "LEGENDARIO")
 
-os.system(limpiar)
+utilidades.limpiar()
 
 inventario_completo = {}
 inventario_armas = {}
@@ -54,12 +52,16 @@ for claves, cantidad in inventarios.items():
         else:
             inventario_armas[id_arma] = [nombre_arma, precio_arma, 1]
 
+if not inventario_completo:
+    input("Tiene el inventario vacio, presione ENTER para volver al menu principal:")
+    runpy.run_path("menu_principal.py")
+
 opciones_menu = ["[0] Volver al menu principal", "[1] Ver inventario completo", "[2] Ver inventario de solo camuflajes", "[3] Ver inventario de solo armas"]
 
 while True:
     opcion_general = utilidades.mostrar_menu("Inventario de " + nombre_usuario_ingresado, opciones_menu)
 
-    os.system(limpiar)
+    utilidades.limpiar()
 
     if opcion_general == 0:
         runpy.run_path("menu_principal.py")

@@ -1,20 +1,11 @@
 # -*- coding: utf-8 -*-
 
 
-import sys
-import os
 import re
 import utilidades
 import runpy
 
-if sys.platform.startswith("win"):
-    import msvcrt
-else:
-    import termios
-    import tty
-
-limpiar = "cls" if os.name == "nt" else "clear"
-os.system(limpiar)
+utilidades.limpiar()
 
 # CARGA DE DATOS
 usuarios = utilidades.cargar_diccionario("usuarios")
@@ -58,61 +49,17 @@ opciones_menu = [
 ]
 
 while True:
-    opcion_seleccionada = 0
-    menu_activo = True
-
-    while menu_activo:
-        os.system(limpiar)
-        print("<<<<<<<<<<<<<<<<<<< Mercado >>>>>>>>>>>>>>>>>>>")
-        print("\nUse las flechas para moverse y ENTER para seleccionar:\n")
-
-        if sesion_iniciada:
-            print("\nSesion iniciada como:", nombre_usuario, "\n")
-        else:
-            print("\nSesion no iniciada, por favor diríjase a la gestión de usuarios\n")
-
-        for indice, texto in enumerate(opciones_menu):
-            prefijo = "\033[92m> \033[0m" if indice == opcion_seleccionada else "  "
-            print(prefijo + texto)
-
-        print("\n<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
-
-        # Captura de teclas
-        if sys.platform.startswith("win"):
-            tecla = utilidades._leer_tecla_windows()
-            if tecla == '\xe0':
-                tecla = utilidades._leer_tecla_windows()
-                if tecla == 'H':
-                    opcion_seleccionada = (opcion_seleccionada - 1) % len(opciones_menu)
-                elif tecla == 'P':
-                    opcion_seleccionada = (opcion_seleccionada + 1) % len(opciones_menu)
-            elif tecla == '\r':
-                menu_activo = False
-        else:
-            entrada = sys.stdin.fileno()
-            configuracion_anterior = termios.tcgetattr(entrada)
-            tty.setraw(entrada)
-            tecla1 = sys.stdin.read(1)
-            if tecla1 == '\x1b':
-                sys.stdin.read(1)
-                tecla3 = sys.stdin.read(1)
-                if tecla3 == 'A':
-                    opcion_seleccionada = (opcion_seleccionada - 1) % len(opciones_menu)
-                elif tecla3 == 'B':
-                    opcion_seleccionada = (opcion_seleccionada + 1) % len(opciones_menu)
-            elif tecla1 == '\n':
-                menu_activo = False
-            termios.tcsetattr(entrada, termios.TCSADRAIN, configuracion_anterior)
+    opcion_seleccionada = utilidades.mostrar_menu("Mercado", opciones_menu, sesion_iniciada, nombre_usuario)
 
     # OPCIONES DEL MENU
     if opcion_seleccionada == 0:
-        os.system(limpiar)
+        utilidades.limpiar()
         print("\033[92mVolviendo al menu principal...\033[0m\n")
         runpy.run_path("menu_principal.py")
         break
 #OPCION 1 (BUSCAR Y COMPRAR ARMAS)
     elif opcion_seleccionada == 1:
-        os.system(limpiar)
+        utilidades.limpiar()
         print(">> Buscar un arma en el mercado\n")
 
         if not mercado:
@@ -226,7 +173,7 @@ while True:
                 esperar()
 #OPCION 2 (AGREGAR UN ARMA AL MERCADO)
     elif opcion_seleccionada == 2:
-        os.system(limpiar)
+        utilidades.limpiar()
         print(">> Agregar un arma al mercado\n")
         if not sesion_iniciada:
             print("Debe iniciar sesian para vender en el mercado.")
@@ -320,7 +267,7 @@ while True:
         esperar()
 #OPCION 3 (ELIMINAR UNA PUBLICACION DEL MERCADO)
     elif opcion_seleccionada == 3:
-        os.system(limpiar)
+        utilidades.limpiar()
         print(">> Eliminar un arma del mercado\n")
 
         if not sesion_iniciada:

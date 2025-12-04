@@ -1,14 +1,11 @@
 # -*- coding: utf-8 -*-
 
 
-import os
 import runpy
-
 import utilidades
 
-limpiar = "cls" if os.name == "nt" else "clear"
+utilidades.limpiar()
 
-os.system(limpiar)
 try:
     cajas = utilidades.cargar_diccionario("cajas")
     contenido_cajas = utilidades.cargar_diccionario("contenido_cajas")
@@ -26,7 +23,7 @@ opcion_seleccionada = utilidades.mostrar_menu("Modo administrador", opciones_men
 
 
 if opcion_seleccionada == 0:
-    os.system(limpiar)
+    utilidades.limpiar()
     print("\033[92mVolviendo al menu principal...\033[0m\n")
     runpy.run_path("menu_principal.py")
     exit()
@@ -35,7 +32,7 @@ if opcion_seleccionada == 1:
     sub_opciones_edicion_cajas_menu = ["[0] Volver al menu de Admin", "[1] Editar Nombre", "[2] Editar Detalle", "[3] Editar Precio"]
     sub_opciones_edicion_cajas = utilidades.mostrar_menu("Edicion de cajas", sub_opciones_edicion_cajas_menu)
     if sub_opciones_edicion_cajas == 0:
-        os.system(limpiar)
+        utilidades.limpiar()
         runpy.run_path("modo_admin.py")
     if sub_opciones_edicion_cajas == 1: #EDITAR NOMBRE
         while True:
@@ -93,4 +90,3 @@ elif opcion_seleccionada == 2: #EDITAR CONTENIDO DE LAS CAJAS
 elif opcion_seleccionada == 5:
     for id_usuario, datos in usuarios.items():
         nombre_usuario, correo, contrasenia, saldo = usuarios[id_usuario]
-        
